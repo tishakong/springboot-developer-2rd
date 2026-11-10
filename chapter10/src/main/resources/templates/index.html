@@ -13,19 +13,28 @@
 <body>
 <div class="container">
   <div class="card shadow-sm mb-4">
-    <div class="card-header text-center">
-      <h3 class="mb-0">🚀 AWS EC2 & RDS 배포 검증 페이지</h3>
+    <div class="card-header text-center py-3">
+      <h3 class="mb-2 fw-bold">🚀 AWS EC2 & RDS 배포 검증 페이지</h3>
+      <!-- 현재 연결된 DB 엔진 이름 표시 -->
+      <div class="mt-2">
+                <span class="badge bg-light text-dark fs-6 px-3 py-2 border">
+                    현재 연결된 DB: <strong th:text="${dbName}" class="text-primary">MySQL</strong>
+                </span>
+      </div>
     </div>
     <div class="card-body">
       <p class="text-muted text-center mb-4">
-        이 페이지는 EC2에서 구동되는 Spring Boot와 RDS MySQL 간의 정상적인 통신 상태를 입증합니다.
+        이 페이지는 EC2에서 구동되는 Spring Boot와 RDS 간의 연동 상태 및 데이터 저장을 증명합니다.
       </p>
 
-      <!-- 입력 폼 -->
+      <!-- 메모 입력 폼 -->
       <form th:action="@{/memo}" method="post" class="mb-4">
+        <!-- Spring Security가 적용되어 있을 경우 403 에러를 방지하는 CSRF 안전 태그 -->
+        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
         <div class="input-group">
           <input type="text" name="content" class="form-control form-control-lg"
-                 placeholder="본인의 이름을 입력해주세요. ex) 이하늘" required>
+                 placeholder="학번/이름 및 확인 메시지를 입력하세요 (예: 20240001 홍길동 - RDS 연동 완료)" required>
           <button class="btn btn-primary btn-lg" type="submit">DB에 저장</button>
         </div>
       </form>
@@ -33,13 +42,13 @@
       <hr>
 
       <!-- DB 조회 결과 목록 -->
-      <h5 class="fw-bold mb-3">📌 MySQL DB 저장 및 조회 목록</h5>
+      <h5 class="fw-bold mb-3">📌 DB 저장 및 조회 목록</h5>
       <div class="table-responsive">
         <table class="table table-hover table-bordered bg-white">
           <thead class="table-light text-center">
           <tr>
             <th style="width: 15%;">ID</th>
-            <th>메모 내용 (RDS 저장 데이터)</th>
+            <th>메모 내용 (DB 저장 데이터)</th>
             <th style="width: 30%;">저장 일시</th>
           </tr>
           </thead>
